@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Quitting Time Calculator</title>
+		<style>
+			p.pleft{
+			margin-left: 50px;
+			}
+			label.left{
+			display:inline-block;
+			width:120px;
+			margin-right:10px;
+			text-align:right;
+			}
+			label.middle{
+			display:inline-block;
+			width:300px;
+			margin-right:10px;
+			text-align:right;
+			}
+		</style>
+	</head>
+	<body>
+		<p class="pleft">Enter Start time to compute quitting time.</p>
+			<label class="left" for="txtStartingTime">Starting Time: </label>
+			<input type="time" id="timeIn" required/>
+		</br>
+			<label class="left" for="txtLunchTime">Lunch Time(min): </label>
+			<input value="30" type="number" size="3" id="lunchIn"/>
+			<button onclick="myFunction()">Compute Quit Time</button>
+
+		<p></p>
+			<label class="left" for="txtQuittingTime">Quitting Time: </label>
+			<input id="timeOut" size="30" disabled/>
+		<p>
+			<label class="left" for="txtQuittingtime2">Quitting Time: </label>
+			<span id="message"></span>
+		</p>
+		<p>
+			<span id="debugMessage"></span>
+		</p>
+		<p>
+			<label class="left" for="txtReset">Reset </label>
+			<button onclick="reset()">Reset</button>
+		</p>
+
+		<script>
+			function myFunction() {
+				var timeIn = document.getElementById("timeIn").value;
+				var lunchIn = document.getElementById("lunchIn").value;
+				if (timeIn == null || timeIn == "") {
+					document.getElementById("message").setAttribute("style", "color:red;");
+					document.getElementById("message").innerHTML = "Time must be filled in";
+					document.getElementById("timeOut").value = "";
+					exit;
+				}
+				if (timeIn.indexOf(":") < 0) {
+					document.getElementById("message").setAttribute("style", "color:red;");
+					document.getElementById("message").innerHTML = "Time must be filled in HH:MM AM or PM";
+					document.getElementById("timeOut").value = "";
+					exit;
+				}
+				var hourStr = timeIn.substring(0,timeIn.indexOf(":"));
+				var minStr  = timeIn.substring(timeIn.indexOf(":") + 1);
+				var hour24 = parseInt(hourStr);
+				var hour12 = parseInt(hourStr);
+				var min = parseInt(minStr);
+				var lunchTime = parseInt(lunchIn) / 60;
+				var workTime = 8;
+				if(hour12 > 12) {
+					hour12 = hour12 - 12;
+				}
+				hour24 = hour24 + workTime;
+				hour12 = hour12 + workTime;
+				if(hour24 > 24) {
+					hour24 = hour24 - 24;
+				}
+				if (hour12 > 12) {
+					hour12 = hour12 - 12;
+				}
+				min = min / 60;
+				min  = min + lunchTime;
+				if(min >= 1) {
+					hour24 = hour24 + 1;
+					hour12 = hour12 + 1;
+					min  = min - 1;
+				}
+				min = min * 60;
+				var quit24 = hour24 + ":" + min.toFixed(1);
+				var quit12 = hour12 + ":" + min.toFixed(1);
+                var amPM = "";
+                if(hour24 > 12) {
+                   amPM = "PM";
+				}
+                else {
+                   amPM = "AM";
+                }
+				var quitT = quit24 + "(24Hr)" + " or " + quit12 + " " + amPM + " (12Hr)";
+				document.getElementById("timeOut").setAttribute("style", "color:red;");
+				document.getElementById("message").setAttribute("style", "color:red;");
+				document.getElementById("timeOut").value = quitT;
+				document.getElementById("message").innerHTML = quitT;
+
+				var headerMsg = "Debug Variables</br>";
+				var timeInMsg = "timeIn = " + timeIn + "</br>";
+				var lunchInMsg = "lunchIn = " + lunchIn + "</br>";
+				var hour24Msg = "hour24 = " + hour24 + "</br>";
+				var hour12Msg = "hour12 = " + hour12 + "</br>";
+				var minMsg = "min = " + min + "</br>";
+				var debugMsg = "";
+				debugMsg = debugMsg.concat(headerMsg,timeInMsg,lunchInMsg,hour24Msg,hour12Msg,minMsg);
+				//var debugMsg = ("Debug Variables</br> Time In = " + timeIn + "</br>hour24 = " + hour24);
+				document.getElementById("debugMessage").innerHTML = debugMsg;
+			//	var test = document.body.innerHTML += "<button onclick='debug(timeIn)'>DebugVariables</button>";
+			//	document.write(test);
+		}
+		function reset() {
+			document.getElementById("timeOut").setAttribute("style", "color:black;");
+			document.getElementById("message").setAttribute("style", "color:black;");
+			document.getElementById("message").setAttribute("style", "color:black;");
+			document.getElementById("timeIn").value = "";
+			document.getElementById("lunchIn").value = "30";
+			document.getElementById("timeOut").value = "";
+			document.getElementById("message").innerHTML = "";
+			document.getElementById("debugMessage").innerHTML = "";
+		}
+	</script>
+
+</body>
+</html>
