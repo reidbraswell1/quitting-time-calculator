@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="UTF-8">
+  <title>Quitting Time Calclator</title>
+  <style>
+	.center{
+     text-align: center;
+     }
+    div.div1{
+      border: 5px solid red;
+      display: inline-block;
+      background: yellow;
+      padding: 10px;
+      height: 350px;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-top: 30px;
+	}
+    p.pleft{
+      margin-left: 50px;
+    }
+	label.left{
+	  display: inline-block;
+	  width: 105px;
+      margin-right: 10px;
+	  text-align: right;
+	}
+	label.middle{
+	  display:inline-block;
+	  width:75px;
+	  margin-right:10px;
+	  text-align:right;
+	}
+	span.spanmiddle{
+	    margin-left: 210px;
+    }
+	table{
+	  border-spacing: 50px 10px;
+      border-collapse: separate;
+	}
+  </style>
+  </head>
+  
+  <body>
+    <h2 style="margin-left: 300px;">Quitting Time Calculator</h2>
+        <div class="div1">
+		<table>
+			<tr>
+				<th>Enter Start time to compute quitting time.</th>
+			</tr>
+			<tr>
+				<td>
+					<label class="left" for="txtStartingTime">Starting Time: </label>
+                    <input type="time" id="timeIn" required />
+                </td>
+			</tr>
+			<tr>
+				<td>
+					<label class="left" for="txtLunchTime">Lunch Time(min): </label>
+					<input value="30" type="number" min="1" max="480" id="lunchIn"  required/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="left" for="txtWorkDayLength">Work Day(HR): </label>
+					<input id="workIn" type="number" value="8" min="1" max="12" required/> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="left" for="txtQuittingTime">Quitting Time: </label>
+					<span id="timeOut"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="left" for="txtMessage">Message: </label>
+					<span id="message"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button type="submit" onclick="clockOutTime()">Compute Quit Time</button>
+					<button onclick="reset1()">Reset</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+			</tr>
+		</table>
+        </div>
+
+        <div class="div1">
+            <table>
+                <tr>
+                   <th>Enter Daily time for end of week remainder.</th>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Mon: </label>
+                        <input type="number" max="12" min="1" id="mon"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Tue: </label>
+                        <input type="number" max="12" min="1" id="tue"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Wed: </label>
+                        <input type="number" max="12" min="1" id="wed" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Thu: </label>
+                        <input type="number" max="12" min="1" id="thu" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Fri: </label>
+                        <input type="number" max="12" min="1" id="fri" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Sat: </label>
+                        <input type="number" max="12" min="1" id="sat" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="middle">Remaining Time: </label>
+                        <span id="remainingTime"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="timeRemaining()">Compute Remaining Time</button>
+                        <button onclick="reset2()">Reset</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+<!--
+		<p>
+			<label class="left" for="txtMessage">Message: </label>
+			<span id="message"></span>
+		</p>
+-->
+<!--
+		<p>
+			<span id="debugMessage"></span>
+		</p>
+-->
+		<script>
+			function clockOutTime() {
+				var timeIn = document.getElementById("timeIn").value;
+				var lunchIn = document.getElementById("lunchIn").value;
+				var workIn = document.getElementById("workIn").value;
+				if (timeIn == null || timeIn == "") {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Time must be filled in";
+				    document.getElementById("timeOut").removeAttribute("style");
+					document.getElementById("timeOut").innerHTML = "";
+					exit;
+				}
+				if (lunchIn == null || lunchIn == "") {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Lunch Time must be filled in";
+				    document.getElementById("timeOut").removeAttribute("style");
+                    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (lunchIn > 480) {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Lunch Time too big";
+				    document.getElementById("timeOut").removeAttribute("style");
+				    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (lunchIn < 0) {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Lunch Time too small";
+				    document.getElementById("timeOut").removeAttribute("style");
+				    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (workIn == null || workIn == "") {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Work Time must be filled in";
+				    document.getElementById("timeOut").removeAttribute("style");
+                    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (workIn > 12) {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Work Time Time too big";
+				    document.getElementById("timeOut").removeAttribute("style");
+				    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (workIn < 0) {
+				    document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;");
+				    document.getElementById("message").innerHTML = "Work Time Time too small";
+				    document.getElementById("timeOut").removeAttribute("style");
+				    /*
+				    document.getElementById("timeOut").setAttribute("style", "");
+                    */
+				    document.getElementById("timeOut").innerHTML = "";
+				    exit;
+				}
+				if (timeIn.indexOf(":") < 0) {
+					document.getElementById("message").setAttribute("style", "color:black;");
+					document.getElementById("message").innerHTML = "Time must be filled in HH:MM AM or PM";
+					document.getElementById("timeOut").value = "";
+					exit;
+				}
+				var hourStr = timeIn.substring(0,timeIn.indexOf(":"));
+				var minStr  = timeIn.substring(timeIn.indexOf(":") + 1);
+				var hour24 = parseInt(hourStr);
+				var hour12 = parseInt(hourStr);
+				var min = parseInt(minStr);
+				var lunchTime = parseInt(lunchIn) / 60;
+				var workTime = parseFloat(workIn);
+				var workRem = workTime % 1;
+				var currentDate = new Date();
+                var h = ("0" + currentDate.getHours()).slice(-2);
+                var m = ("0" + currentDate.getMinutes()).slice(-2);
+                var s = ("0" + currentDate.getSeconds()).slice(-2);
+
+				// Turn work time back into a whole number if fractional
+				if(workRem > 0){
+					min = min + (workRem * 60);
+					workTime = workTime - workRem;
+				}
+				if(hour12 > 12) {
+					hour12 = hour12 - 12;
+				}
+				hour24 = hour24 + workTime;
+				hour12 = hour12 + workTime;
+				if(hour24 > 24) {
+					hour24 = hour24 - 24;
+				}
+				if (hour12 > 12) {
+					hour12 = hour12 - 12;
+				}
+				min = min / 60;
+				min  = min + lunchTime;
+				// Minutes should be a decimal value < 1 if
+                // > 1 add back in the whole number of minutes
+                // to the hours
+				if(min >= 1) {
+					hour24 = hour24 + Math.floor(min);
+					hour12 = hour12 + Math.floor(min);
+					min  = min - Math.floor(min);
+				}
+				if (hour12 > 12) {
+					hour12 = hour12 - 12;
+				}
+				min = min * 60;
+				var quit24 = hour24.toFixed(0) + ":" + pad(min.toFixed(1),4);
+				var quit12 = hour12.toFixed(0) + ":" + pad(min.toFixed(1),4);
+                var amPM = "";
+                if(hour24 > 12) {
+                   amPM = "PM";
+				}
+                else {
+                   amPM = "AM";
+                }
+				var quitT = quit24 + "(24Hr)" + " or " + quit12 + " " + amPM + " (12Hr)";
+                var quitTimeFraction = parseFloat(hour24) + min/60;
+                var currentTimeFraction = parseFloat(h) + m/60;
+                var remainingTime = 0;
+                var remainingTimeWhole = 0;
+                var remainingTimeRem = 0;
+                if(quitTimeFraction >= currentTimeFraction) {
+                   remainingTime = quitTimeFraction - currentTimeFraction;
+                   remainingTimeWhole = parseInt(remainingTime / 1);
+                   remainingTimeRem = remainingTime % 1;
+                }
+                var currentTime = "CT = " + h + ":" + m + "." + s + "  RT = " + remainingTimeWhole + " (Hours) " + (remainingTimeRem * 60).toFixed(1) + "(Mins)";
+				document.getElementById("timeOut").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold; border: 2px solid red; padding: 5px; background: white;");
+				//document.getElementById("message").setAttribute("style", "color:red;");
+				//document.getElementById("timeOut").value = quitT;
+				document.getElementById("timeOut").innerHTML = quitT;
+				document.getElementById("message").setAttribute("style", "color:black; text-decoration: underline; font-weight: bold;")
+				document.getElementById("message").innerHTML = currentTime;
+				//document.getElementById("message").innerHTML = quitT;
+
+				var headerMsg = "Debug Variables</br>";
+				var timeInMsg = "timeIn = " + timeIn + "</br>";
+				var lunchInMsg = "lunchIn = " + lunchIn + "</br>";
+				var hour24Msg = "hour24 = " + hour24 + "</br>";
+				var hour12Msg = "hour12 = " + hour12 + "</br>";
+				var minMsg = "min = " + min + "</br>";
+				var debugMsg = "";
+				debugMsg = debugMsg.concat(headerMsg,timeInMsg,lunchInMsg,hour24Msg,hour12Msg,minMsg);
+				//var debugMsg = ("Debug Variables</br> Time In = " + timeIn + "</br>hour24 = " + hour24);
+				//document.getElementById("debugMessage").innerHTML = debugMsg;
+			//	var test = document.body.innerHTML += "<button onclick='debug(timeIn)'>DebugVariables</button>";
+			//	document.write(test);
+		}
+		function pad(num, size) {
+				var s = num+"";
+				while (s.length < size) s = "0" + s;
+				return s;
+		}
+		function timeRemaining() {
+				var monStr = document.getElementById("mon").value;
+				var tueStr = document.getElementById("tue").value;
+				var wedStr = document.getElementById("wed").value;
+				var thuStr = document.getElementById("thu").value;
+				var friStr = document.getElementById("fri").value;
+				var satStr = document.getElementById("sat").value;
+				var mon;
+				var tue;
+				var wed;
+				var thu;
+				var fri;
+				var sat;
+				if (monStr == null || monStr == "") {
+					mon = 0;
+				}
+				else {
+					mon = parseFloat(monStr);
+				}
+				if (tueStr == null || tueStr == "") {
+					tue = 0;
+				}
+				else {
+					tue = parseFloat(tueStr);
+				}
+				if (wedStr == null || wedStr == "") {
+					wed = 0;
+				}
+				else {
+					wed = parseFloat(wedStr);
+				}
+				if (thuStr == null || thuStr == "") {
+					thu = 0;
+				}
+				else {
+					thu = parseFloat(thuStr);
+				}
+				if (friStr == null || friStr == "") {
+					fri = 0;
+				}
+				else {
+					fri = parseFloat(friStr);
+				}
+				if (satStr == null || satStr == "") {
+					sat = 0;
+				}
+				else {
+					sat = parseFloat(satStr);
+				}
+				var remaining = 40 - mon - tue - wed - thu - fri - sat;
+				document.getElementById("remainingTime").setAttribute("style", "color: black; text-decoration: underline; font-weight: bold; border: 2px solid red; padding: 5px; background: white;");
+				//document.getElementById("remainingTime").value = remaining.toFixed(2);
+				document.getElementById("remainingTime").innerHTML = remaining.toFixed(2);
+		}
+		function reset1() {
+			document.getElementById("timeOut").setAttribute("style", "color:black;");
+			document.getElementById("message").setAttribute("style", "color:black;");
+			document.getElementById("message").setAttribute("style", "color:black;");
+			document.getElementById("timeIn").value = "";
+			document.getElementById("lunchIn").value = "30";
+			document.getElementById("timeOut").innerHTML = "";
+			document.getElementById("message").innerHTML = "";
+		}
+		function reset2() {
+		    document.getElementById("remainingTime").setAttribute("style", "color:black;");
+			document.getElementById("mon").value = "";
+			document.getElementById("tue").value = "";
+			document.getElementById("wed").value = "";
+			document.getElementById("thu").value = "";
+			document.getElementById("fri").value = "";
+			document.getElementById("sat").value = "";
+			document.getElementById("remainingTime").innerHTML = "";
+		}
+	</script>
+</body>
+</html>
